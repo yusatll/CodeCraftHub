@@ -1,0 +1,55 @@
+# Dockerfile for Node.js application
+
+# Use the official Node.js image as the base image
+FROM node:latest
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json to install dependencies
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy all source code to the container
+COPY . .
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Command to run the Node.js application
+CMD ["node", "index.js"]
+```
+
+To create a Dockerfile for the MongoDB server, you can use the official MongoDB image from Docker Hub. Here is an example:
+
+```Dockerfile
+# Dockerfile for MongoDB server
+
+# Use the official MongoDB image as the base image
+FROM mongo:latest
+
+# Expose the default MongoDB port
+EXPOSE 27017
+
+# Command to run the MongoDB server
+CMD ["mongod"]
+```
+
+To run both containers together, you can use Docker Compose. Create a `docker-compose.yml` file with the following configuration:
+
+```yaml
+version: '3'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
